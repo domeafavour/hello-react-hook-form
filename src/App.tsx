@@ -1,10 +1,10 @@
 import React from 'react';
-import { LoginForm } from './LoginForm';
+import { UserProfile } from './UserProfile';
 
 function App() {
   return (
     <div>
-      <LoginForm />
+      <UserProfile />
     </div>
   );
 }
