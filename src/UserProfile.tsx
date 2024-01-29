@@ -1,13 +1,25 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import * as z from 'zod';
+
+const schema = z
+  .object({
+    name: z.object({
+      first: z.string({ required_error: 'first name is required' }).min(2, {
+        message: 'first name must be at least 2 characters',
+      }),
+      last: z.string().promise(),
+    }),
+  })
+  .required();
+
+type Profile = z.infer<typeof schema>;
 
 export function UserProfile() {
-  const { register, handleSubmit, control } = useForm<{
-    name: {
-      first: string;
-      last: string;
-    };
-  }>();
+  const { register, handleSubmit, control } = useForm<Profile>({
+    resolver: zodResolver(schema),
+  });
 
   return (
     <form
@@ -18,13 +30,6 @@ export function UserProfile() {
       <Controller
         name="name.first"
         control={control}
-        rules={{
-          required: 'first name is required',
-          minLength: {
-            value: 2,
-            message: 'first name must be at least 2 characters',
-          },
-        }}
         render={(firstNameProps) => {
           const { error: firstNameError } = firstNameProps.fieldState;
           return (
